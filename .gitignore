@@ -14,3 +14,6 @@ DOCUMENTATION.md
 Challenge.pdf
 Bruno-Collection/
 frontend/node_modules/
+frontend/dist/
+package-lock.json
+frontend/.vite/
