@@ -1,4 +1,4 @@
-name: Python Tests
+name: Unit Tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,21 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt pytest-cov
 
-      - name: Run tests
-        run: pytest test/ -v
+      - name: Run tests with coverage
+        run: pytest test/ -v --cov=app --cov-report=term-missing --cov-report=json
+
+      - name: Display coverage summary
+        run: |
+          echo "## Coverage Report" >> $GITHUB_STEP_SUMMARY
+          python -c "
+          import json
+          data = json.load(open('coverage.json'))
+          total = data['totals']
+          print(f'| Metric | Value |', flush=True)
+          print(f'|--------|-------|', flush=True)
+          print(f'| Statements | {total[\"num_statements\"]} |', flush=True)
+          print(f'| Missing | {total[\"missing_lines\"]} |', flush=True)
+          print(f'| Coverage | {total[\"percent_covered\"]:.1f}% |', flush=True)
+          " >> $GITHUB_STEP_SUMMARY

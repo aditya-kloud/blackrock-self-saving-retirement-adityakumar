@@ -85,3 +85,18 @@ def test_amount_exceeds_max():
     assert resp.status_code == 200
     data = resp.json()
     assert len(data["invalid"]) == 1
+
+
+def test_wrong_remanent_is_invalid():
+    """Correct ceiling but wrong remanent → invalid."""
+    payload = {
+        "wage": 50000,
+        "transactions": [
+            {"date": "2023-06-10 09:15:00", "amount": 250.0, "ceiling": 300.0, "remanent": 99.0}
+        ]
+    }
+    resp = client.post(BASE_URL, json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert len(data["invalid"]) == 1
+    assert "Invalid remanent" in data["invalid"][0]["message"]

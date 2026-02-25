@@ -2,8 +2,10 @@
 # Validation:  /transactions:parse — ceiling and remanent calculation
 # Command: pytest test/test_parse.py -v
 
+import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from app.services.calculator import parse_datetime
 
 client = TestClient(app)
 
@@ -64,3 +66,28 @@ def test_parse_empty_list():
     resp = client.post("/blackrock/challenge/v1/transactions:parse", json=[])
     assert resp.status_code == 200
     assert resp.json() == []
+
+
+def test_health_endpoint():
+    """GET / returns ok status."""
+    resp = client.get("/")
+    assert resp.status_code == 200
+    assert resp.json() == {"status": "ok"}
+
+
+def test_invalid_body_triggers_validation_handler():
+    """Sending wrong types triggers the custom 422 handler."""
+    resp = client.post(
+        "/blackrock/challenge/v1/transactions:parse",
+        json=[{"date": "2023-01-01 10:00:00", "amount": "not-a-number"}],
+    )
+    assert resp.status_code == 422
+    data = resp.json()
+    assert "detail" in data
+    assert data["message"] == "Invalid request body"
+
+
+def test_parse_datetime_invalid_format():
+    """parse_datetime raises ValueError on unrecognised format."""
+    with pytest.raises(ValueError, match="Invalid datetime format"):
+        parse_datetime("not-a-date")

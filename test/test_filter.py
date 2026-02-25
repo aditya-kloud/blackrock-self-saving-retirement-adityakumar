@@ -83,6 +83,20 @@ def test_filter_duplicate_rejected():
     assert data["invalid"][0]["message"] == "Duplicate transaction"
 
 
+def test_filter_amount_exceeds_max():
+    """Amount >= 500000 is caught as invalid in the filter endpoint."""
+    payload = {
+        "q": [], "p": [], "k": [],
+        "wage": 50000,
+        "transactions": [{"date": "2023-01-01 10:00:00", "amount": 500000}],
+    }
+    resp = client.post(BASE_URL, json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert len(data["invalid"]) == 1
+    assert data["invalid"][0]["message"] == "Amount exceeds maximum allowed value"
+
+
 def test_filter_p_periods_stack():
     """Multiple p periods that overlap should all add their extras."""
     payload = {

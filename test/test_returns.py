@@ -98,3 +98,21 @@ def test_nps_tax_benefit_with_high_income():
     # At 12L income, tax benefit should be > 0
     k1 = resp.json()["savingsByDates"][0]
     assert k1["taxBenefit"] > 0.0
+
+
+def test_nps_tax_bracket_12l_to_15l():
+    """NPS: income 13.2L (wage=110000) hits the 20% tax bracket (12L–15L)."""
+    payload = {**PDF_PAYLOAD, "wage": 110000}  # 13.2L annual
+    resp = client.post(NPS_URL, json=payload)
+    assert resp.status_code == 200
+    k1 = resp.json()["savingsByDates"][0]
+    assert k1["taxBenefit"] > 0.0
+
+
+def test_nps_tax_bracket_above_15l():
+    """NPS: income 15.6L (wage=130000) hits the 30% tax bracket (>15L)."""
+    payload = {**PDF_PAYLOAD, "wage": 130000}  # 15.6L annual
+    resp = client.post(NPS_URL, json=payload)
+    assert resp.status_code == 200
+    k1 = resp.json()["savingsByDates"][0]
+    assert k1["taxBenefit"] > 0.0
