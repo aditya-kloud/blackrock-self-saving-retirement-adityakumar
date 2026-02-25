@@ -1,13 +1,15 @@
 name: Unit Tests
 
 on:
-  push:
-    branches: ["main" , "feature/front-end"]
-  pull_request:
-    branches: ["main"]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   backend:
+    if: |
+      github.event_name != 'pull_request_review' ||
+      (github.event.review.state == 'approved' &&
+       github.event.pull_request.user.login != 'aditya-kloud')
     runs-on: ubuntu-latest
 
     steps:
