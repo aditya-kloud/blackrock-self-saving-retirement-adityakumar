@@ -1,0 +1,41 @@
+backend:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'app/**'
+
+frontend:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'frontend/src/**'
+      - 'frontend/public/**'
+      - 'frontend/index.html'
+      - 'frontend/vite.config.*'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'requirements.txt'
+      - 'frontend/package.json'
+      # - 'frontend/package-lock.json'
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'test/**'
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**'
+
+docker:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'Dockerfile'
+      - 'docker-compose*.yml'
+      - '.dockerignore'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'

@@ -1,3 +1,8 @@
+# docker build -t blk-hacking-ind-aditya-kumar .
+
+# python:3.11-slim — Debian-based minimal Linux image chosen for:
+#   small footprint (~50MB vs ~900MB full), official Python support,
+#   production-grade stability, and no unnecessary OS packages.
 FROM python:3.11-slim
 
 # Set working directory inside container

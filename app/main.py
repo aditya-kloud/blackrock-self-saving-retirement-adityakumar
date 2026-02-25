@@ -1,12 +1,20 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers import transactions, returns, performance
 
 app = FastAPI(
     title="BlackRock Auto-Saving API",
     description="Automated retirement savings through expense-based micro-investments",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
